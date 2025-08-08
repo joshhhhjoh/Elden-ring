@@ -100,33 +100,7 @@ renderTimer();
 })();
 
 // ------ Copy buttons for .kbd and code blocks ------
-(function(){
-  function attachCopy(el, getText){
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'btn ghost copy-mini';
-    btn.style.padding = '4px 8px';
-    btn.style.fontSize = '12px';
-    btn.style.marginLeft = '8px';
-    btn.textContent = 'Copy';
-    btn.addEventListener('click', () => {
-      const text = getText();
-      if(navigator.clipboard?.writeText){
-        navigator.clipboard.writeText(text).then(()=>{
-          const t = btn.textContent;
-          btn.textContent = 'Copied!';
-          setTimeout(()=>btn.textContent=t, 1000);
-        });
-      }else{
-        const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta);
-        ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-      }
-    });
-    el.insertAdjacentElement('afterend', btn);
-  }
-  document.querySelectorAll('.kbd').forEach(k => attachCopy(k, () => k.textContent.trim()));
-  document.querySelectorAll('pre code').forEach(code => attachCopy(code, () => code.textContent));
-})();
+
 
 // ------ Command palette (search) ------
 (function(){
@@ -323,5 +297,19 @@ renderTimer();
     const title = document.title.replace(/[^\w\-]+/g,'_').slice(0,60) || 'guide';
     downloadTxt(`${title}.txt`, txt);
     if(window.__showToast) window.__showToast('Downloaded TXT');
+  });
+})();
+
+
+// Warning dismiss logic
+(function(){
+  const warn = document.querySelector('.warning');
+  if(!warn) return;
+  if(sessionStorage.getItem('warnDismissed') === 'true'){
+    warn.style.display = 'none';
+  }
+  warn.addEventListener('click', () => {
+    warn.style.display = 'none';
+    sessionStorage.setItem('warnDismissed', 'true');
   });
 })();
