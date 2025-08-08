@@ -21,6 +21,7 @@
       <a href="#eac">Disable EAC</a>
       <a href="#launch">Launch & Attach CE</a>
       <a href="#spawn">Spawn Runes/Items</a>
+      <a href="#tables-online-safe">Tables & Online‑Safe Runes</a>
       <a href="#dupe">Duplicate Loop</a>
       <a href="#online">Clean Online Return</a>
       <a href="#troubleshoot">Troubleshooting</a>
@@ -115,6 +116,62 @@
         </div>
       </details>
     </section>
+
+    
+    <section class="card" id="tables-online-safe">
+      <h2>Using CE Tables + Online‑Safe Runes (Offline Only)</h2>
+
+      <details class="group">
+        <summary>What a CE Table (.CT) is</summary>
+        <div class="inner">
+          <ul>
+            <li>A <b>.CT</b> file is a Cheat Engine script bundle (tables + scripts + hotkeys).</li>
+            <li>Different authors: Hexinton, Marcus101RR, The Grand Archives (TGA), etc.</li>
+            <li>Tables often require a specific game version/DLC. Pick one that matches your build.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="group">
+        <summary>How to load and enable scripts</summary>
+        <div class="inner">
+          <ol>
+            <li>Launch Elden Ring <b>offline</b> with <b>EAC disabled</b>.</li>
+            <li>Open Cheat Engine → <b>File → Open</b> → choose your <span class="kbd">.CT</span> table.</li>
+            <li>Click the PC icon in CE and attach to <span class="kbd">eldenring.exe</span>.</li>
+            <li>In the table list, <b>tick the master/enable script</b> (AOB/enable) until it says <em>Activated</em>.</li>
+            <li>Tick the specific modules you need: <b>ItemGib</b>, <b>AddSoul</b>, etc.</li>
+            <li>Most tables show hotkeys in the Description column; right‑click to change if you want.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="group">
+        <summary>Give yourself runes (offline) — online‑safe workflow</summary>
+        <div class="inner">
+          <ol>
+            <li>Back up your clean save (<span class="kbd">ER0000.sl2</span>) somewhere safe.</li>
+            <li>With Steam offline and EAC disabled, enable <b>AddSoul</b> in CE.</li>
+            <li>Enter a rune amount (e.g., <b>500000</b>) and run the script while in‑game.</li>
+            <li><b>Spend the runes offline</b> (leveling, purchases, etc.).</li>
+            <li>When finished, <b>restore your clean save</b> and put back the original <span class="kbd">start_protected_game.exe</span> before going online.</li>
+          </ol>
+          <p class="callout"><b>Important:</b> Never go online with a save that was edited or created while EAC was disabled. Always return to your <b>clean save</b> first.</p>
+        </div>
+      </details>
+
+      <details class="group">
+        <summary>Quick troubleshooting</summary>
+        <div class="inner">
+          <ul>
+            <li><b>Script won’t activate:</b> Attach after the main menu, or use a table version that matches your patch.</li>
+            <li><b>CE can’t see the process:</b> Verify you launched the EAC‑less executable.</li>
+            <li><b>No effect in game:</b> Re‑enable the script, re‑enter values, and try a small in‑game action to trigger a refresh.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
 
     <section class="card" id="dupe">
       <h2>Duplicate Loop (optional)</h2>
