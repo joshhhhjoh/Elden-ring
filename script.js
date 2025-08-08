@@ -1,11 +1,4 @@
-
-// Theme toggle + PDF
-const themeToggle=document.getElementById('themeToggle');
-try{ if(localStorage.getItem('er_theme')==='gold'){ document.body.classList.add('gold'); } }catch(e){}
-if(themeToggle){themeToggle.addEventListener('click',()=>{
-  document.body.classList.toggle('gold');
-  try{localStorage.setItem('er_theme',document.body.classList.contains('gold')?'gold':'mint');}catch(e){}
-});}
+// PDF
 const exportBtn=document.getElementById('exportPDF');
 if(exportBtn){exportBtn.addEventListener('click',()=>window.print());}
 
@@ -42,7 +35,14 @@ const io=new IntersectionObserver((ents)=>{
 },{rootMargin:'-45% 0px -50% 0px',threshold:0.01});
 sections.forEach(s=>io.observe(s));
 
-// Copy + meter + warn + timer (unchanged)
+// Back to Top
+const toTop=document.getElementById('toTop');
+function toggleTop(){ if(!toTop) return; const show=window.scrollY>400; toTop.classList.toggle('show',show); }
+window.addEventListener('scroll',toggleTop,{passive:true});
+if(toTop) toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+toggleTop();
+
+// Copy + meter + warn + timer
 function copyText(text,onOk){ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(onOk).catch(()=>fallbackCopy(text,onOk));} else {fallbackCopy(text,onOk);} }
 function fallbackCopy(text,onOk){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); onOk();}catch(e){alert('Copy failed — long-press to copy.');} document.body.removeChild(ta); }
 document.querySelectorAll('[data-copy]').forEach(btn=>{ btn.type='button'; btn.dataset.original=btn.textContent; btn.addEventListener('click',()=>{ const el=document.querySelector(btn.getAttribute('data-copy')); if(!el) return; copyText(el.textContent,()=>{ btn.textContent='Copied!'; setTimeout(()=>btn.textContent=btn.dataset.original||'Copy',1200); }); }); });

@@ -1,7 +1,6 @@
-<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'><title>Elden Ring — One Method (v3.5)</title><meta name='theme-color' content='#0c0f10'><link rel='stylesheet' href='styles.css'></head><body>
-<header>
+<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'><title>Elden Ring — One Method (v3.6)</title><meta name='theme-color' content='#0c0f10'><link rel='stylesheet' href='styles.css'></head><body><header>
   <div class="wrap">
-    <div class="brand"><span class="dot"></span><span>ER — One Method Guide (v3.5)</span></div>
+    <div class="brand"><span class="dot"></span><span>ER — One Method Guide (v3.6)</span></div>
     <div class="controls">
       <button class="btn ghost menuBtn" id="menuBtn" title="Open menu">Menu</button>
       <button class="btn ghost" id="exportPDF" title="Export as PDF">PDF</button>
@@ -10,8 +9,7 @@
 </header>
 
 <div class="container">
-  <aside class="side">
-    <nav class="nav">
+  <aside class="side"><nav class="nav">
       <a href="#overview">Overview</a>
       <a href="#prep">Prep</a>
       <a href="#eac">Disable EAC</a>
@@ -20,15 +18,14 @@
       <a href="#dupe">Duplicate Loop</a>
       <a href="#online">Clean Online Return</a>
       <a href="#troubleshoot">Troubleshooting</a>
-    </nav>
-  </aside>
+  </nav></aside>
 
   <main class="main">
     <section class="card" id="overview">
       <h2>Overview (What you’re doing)</h2>
-      <p class="callout">Run Elden Ring <span class="badge">offline</span> without Easy Anti‑Cheat, attach Cheat Engine to <span class="kbd">eldenring.exe</span>, spawn runes/items, then restore a clean save before going online.</p>
+      <p class="callout">Run Elden Ring <span class="badge">offline</span> with EAC disabled, attach Cheat Engine to <span class="kbd">eldenring.exe</span>, spawn runes/items, and keep a clean save for online play.</p>
       <div class="meter" title="Offline Safety Meter"><span id="meterbar"></span></div>
-      <small class="muted">Save path: <span class="kbd">C:\Users\<You>\AppData\Roaming\EldenRing\<SteamID>\ER0000.sl2</span></small>
+      <small class="muted">Save path: <span class="kbd">C:\Users\&lt;You&gt;\AppData\Roaming\EldenRing\&lt;SteamID&gt;\ER0000.sl2</span></small>
     </section>
 
     <section class="card" id="prep">
@@ -46,12 +43,12 @@
     </section>
 
     <section class="card" id="eac">
-      <h2>Disable EAC</h2>
+      <h2>Disable Easy Anti‑Cheat</h2>
       <div class="grid two">
         <div>
           <div class="step"><div class="num">1</div><div>Open <span class="kbd">...\Steam\steamapps\common\ELDEN RING\Game\</span></div></div>
           <div class="step"><div class="num">2</div><div>Rename <span class="kbd">start_protected_game.exe</span> → <span class="kbd">start_protected_game.exe.bak</span></div></div>
-          <div class="step"><div class="num">3</div><div>Copy <span class="kbd">eldenring.exe</span> then rename the copy to <span class="kbd">start_protected_game.exe</span></div></div>
+          <div class="step"><div class="num">3</div><div>Copy <span class="kbd">eldenring.exe</span> and rename that copy to <span class="kbd">start_protected_game.exe</span></div></div>
           <p class="callout">Launching now uses your copy (no EAC) so CE can attach safely.</p>
         </div>
         <div class="check"><input type="checkbox" id="c3"><label for="c3">EAC disabled</label></div>
@@ -59,7 +56,7 @@
     </section>
 
     <section class="card" id="launch">
-      <h2>Launch & Attach CE</h2>
+      <h2>Launch & Attach Cheat Engine</h2>
       <div class="grid two">
         <div>
           <div class="step"><div class="num">1</div><div>Launch via your new <span class="kbd">start_protected_game.exe</span>.</div></div>
@@ -152,6 +149,9 @@
     </section>
   </main>
 </div>
+
+<!-- Back to Top -->
+<div id="toTop"><button class="btn" type="button">▲ Top <small>(smooth)</small></button></div>
 
 <div class="warn" id="warn">⚠️ Don’t go online until you’ve restored your clean save and original files.</div>
 <script src='script.js'></script></body></html>
