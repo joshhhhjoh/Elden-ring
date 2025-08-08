@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'><title>Elden Ring — Offline Modding (One Method, v3.2)</title><meta name='theme-color' content='#0c0f10'><link rel='stylesheet' href='styles_fixed.css'></head><body>
+<header>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span><span>ER — One Method Guide (v3.2)</span></div>
+    <div class="controls">
+      <button class="btn ghost" id="themeToggle" title="Toggle Elden Gold theme">Theme</button>
+      <button class="btn ghost" id="exportPDF" title="Export as PDF">PDF</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <aside class="side">
+    <nav class="nav">
+      <a href="#overview">Overview</a>
+      <a href="#quicktools">Quick Tools</a>
+      <a href="#prep">Prep</a>
+      <a href="#launch">Launch & Mod</a>
+      <a href="#dupe">Duping</a>
+      <a href="#timer">Duping Timer</a>
+      <a href="#resources">Embedded Resources</a>
+      <a href="#online">Going Online</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <section class="card" id="overview">
+      <h2>Overview</h2>
+      <p class="callout"><b>Goal:</b> Run Elden Ring <span class="badge">Offline</span> with <span class="badge">EAC disabled</span>, attach Cheat Engine, and do edits safely. Never take modded saves online.</p>
+      <small class="muted">Save path: <span class="kbd">C:\Users\<You>\AppData\Roaming\EldenRing\<SteamID>\ER0000.sl2</span></small>
+      <hr>
+      <div>
+        <div class="meter" title="Offline Safety Meter"><span id="meterbar"></span></div>
+        <small class="muted">Offline Safety Meter — fills as you complete the checkboxes below.</small>
+      </div>
+    </section>
+
+    <section class="card" id="quicktools">
+      <h2>Quick Tools</h2>
+      <div class="tools">
+        <div class="copyrow">
+          <code id="savePath">C:\\Users\\&lt;You&gt;\\AppData\\Roaming\\EldenRing\\&lt;SteamID&gt;\\ER0000.sl2</code>
+          <button class="btn" data-copy="#savePath">Copy Save Path</button>
+        </div>
+        <div class="copyrow">
+          <code id="gamePath">...\\Steam\\steamapps\\common\\ELDEN RING\\Game\\</code>
+          <button class="btn" data-copy="#gamePath">Copy Game Folder Path</button>
+        </div>
+        <div class="copyrow">
+          <a class="btn ghost" href="https://www.nexusmods.com/eldenring/mods/48" target="_blank" rel="noopener">Hexinton CE Table</a>
+          <a class="btn ghost" href="https://www.nexusmods.com/eldenring/mods/54" target="_blank" rel="noopener">Marcus101RR CE Table</a>
+          <a class="btn ghost" href="https://github.com/The-Grand-Archives/Elden-Ring-CT-TGA" target="_blank" rel="noopener">TGA Table</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="prep">
+      <h2>Prep (once)</h2>
+      <div class="grid two">
+        <div>
+          <div class="check"><input type="checkbox" id="c1"><label for="c1"><b>Back up your save</b> (<span class="kbd">ER0000.sl2</span>)</label></div>
+          <div class="check"><input type="checkbox" id="c2"><label for="c2"><b>Steam → Go Offline</b> and restart Steam</label></div>
+        </div>
+        <div>
+          <details class="group" open>
+            <summary>Disable Easy Anti-Cheat (EAC)</summary>
+            <div class="inner">
+              <div class="step"><div class="num">1</div><div>Open: <span class="kbd">...\Steam\steamapps\common\ELDEN RING\Game\</span></div></div>
+              <div class="step"><div class="num">2</div><div>Rename <span class="kbd">start_protected_game.exe</span> → <span class="kbd">start_protected_game.exe.bak</span></div></div>
+              <div class="step"><div class="num">3</div><div>Copy <span class="kbd">eldenring.exe</span> and rename the copy to <span class="kbd">start_protected_game.exe</span></div></div>
+              <p class="callout"><b>Why:</b> You’ll launch without EAC so CE can attach safely while offline.</p>
+              <div class="check"><input type="checkbox" id="c3"><label for="c3">I completed the EAC disable steps</label></div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="launch">
+      <h2>Launch & Mod (each session)</h2>
+      <div class="grid two">
+        <div>
+          <div class="step"><div class="num">1</div><div>Launch Elden Ring (offline, EAC‑less).</div></div>
+          <div class="step"><div class="num">2</div><div>Open Cheat Engine and attach to <span class="kbd">eldenring.exe</span>.</div></div>
+          <div class="step"><div class="num">3</div><div>Load your table: <b>ItemGib</b>, <b>AddSoul</b>, or <b>TGA</b>. Toggle what you need.</div></div>
+        </div>
+        <div>
+          <details class="group" open>
+            <summary>Quick checklist</summary>
+            <div class="inner">
+              <div class="check"><input type="checkbox" id="l1"><label for="l1">Still offline in Steam</label></div>
+              <div class="check"><input type="checkbox" id="l2"><label for="l2">Launched EAC‑less executable</label></div>
+              <div class="check"><input type="checkbox" id="l3"><label for="l3">CE attached to <span class="kbd">eldenring.exe</span></label></div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="dupe">
+      <h2>Duping Loop (optional)</h2>
+      <div class="grid two">
+        <div>
+          <div class="step"><div class="num">1</div><div>Drop spawned items on the ground.</div></div>
+          <div class="step"><div class="num">2</div><div>Quit the game.</div></div>
+          <div class="step"><div class="num">3</div><div>Restore your save backup over <span class="kbd">ER0000.sl2</span>.</div></div>
+          <div class="step"><div class="num">4</div><div>Launch offline again → pick up the dropped items. Repeat.</div></div>
+        </div>
+        <div>
+          <p class="callout"><b>Tip:</b> Keep two saves — <b>CLEAN_SAVE</b> and <b>WORKING_SAVE</b>. Restore CLEAN_SAVE before going online.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="timer">
+      <h2>Duping Timer</h2>
+      <div class="grid two">
+        <div>
+          <div class="callout"><span id="timerDisplay" style="font-size:1.5rem;font-weight:800">00:00</span></div>
+          <div class="controls">
+            <button class="btn" id="startTimer" type="button">Start</button>
+            <button class="btn ghost" id="pauseTimer" type="button">Pause</button>
+            <button class="btn ghost" id="resetTimer" type="button">Reset</button>
+          </div>
+        </div>
+        <div>
+          <small class="muted">Use this timer to pace your save swaps if you like a rhythm between runs.</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="resources">
+      <h2>Embedded Resources</h2>
+      <div class="tabs">
+        <button class="active" data-tab="tab-tables" type="button">CE Tables</button>
+        <button data-tab="tab-ids" type="button">Item IDs</button>
+        <button data-tab="tab-debug" type="button">Debug Tool</button>
+        <button data-tab="tab-safety" type="button">Safety</button>
+      </div>
+      <div id="tab-tables" class="tabcontent active">
+        <ul>
+          <li><a href="https://www.nexusmods.com/eldenring/mods/48" target="_blank" rel="noopener">Hexinton — Ultimate CE Table (ItemGib)</a></li>
+          <li><a href="https://www.nexusmods.com/eldenring/mods/54" target="_blank" rel="noopener">Marcus101RR — CE Table (AddSoul)</a></li>
+          <li><a href="https://github.com/The-Grand-Archives/Elden-Ring-CT-TGA" target="_blank" rel="noopener">The Grand Archives — GitHub</a></li>
+          <li><a href="https://github.com/The-Grand-Archives/Elden-Ring-CT-TGA/releases" target="_blank" rel="noopener">The Grand Archives — Releases</a></li>
+        </ul>
+      </div>
+      <div id="tab-ids" class="tabcontent">
+        <ul>
+          <li><a href="https://github.com/AltimorTASDK/EldenRing-ItemIDList" target="_blank" rel="noopener">Item IDs — Master List</a></li>
+          <li><a href="https://github.com/Ariescyn/EldenRing-Save-Manager/issues/62" target="_blank" rel="noopener">DLC Item IDs Discussion</a></li>
+        </ul>
+      </div>
+      <div id="tab-debug" class="tabcontent">
+        <ul>
+          <li><a href="https://github.com/Nordgaren/Elden-Ring-Debug-Tool" target="_blank" rel="noopener">Nordgaren — Elden Ring Debug Tool</a></li>
+        </ul>
+      </div>
+      <div id="tab-safety" class="tabcontent">
+        <ul>
+          <li>Stay offline while modding.</li>
+          <li>Restore a clean save before going online.</li>
+          <li>Re-enable original <span class="kbd">start_protected_game.exe</span> and remove copies.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" id="online">
+      <h2>Going Back Online (clean exit)</h2>
+      <div class="grid two">
+        <div>
+          <div class="step"><div class="num">1</div><div>Delete the fake <span class="kbd">start_protected_game.exe</span>.</div></div>
+          <div class="step"><div class="num">2</div><div>Rename your <span class="kbd">.bak</span> back to <span class="kbd">start_protected_game.exe</span>.</div></div>
+          <div class="step"><div class="num">3</div><div>Restore your clean, unmodded save.</div></div>
+          <div class="step"><div class="num">4</div><div>Set Steam back online and launch normally.</div></div>
+        </div>
+        <div>
+          <div class="check"><input type="checkbox" id="cleanSave"><label for="cleanSave">I restored my clean save</label></div>
+          <small class="muted">This controls the sticky warning below.</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="troubleshoot">
+      <h2>Troubleshooting</h2>
+      <details class="group" open>
+        <summary>Game won’t launch offline</summary>
+        <div class="inner">
+          <ul>
+            <li>Recheck Steam’s <b>Go Offline</b> (restart Steam).</li>
+            <li>Verify the EAC rename/copy steps in the <span class="kbd">Game</span> folder.</li>
+          </ul>
+        </div>
+      </details>
+      <details class="group">
+        <summary>CE can’t attach</summary>
+        <div class="inner">
+          <ul>
+            <li>Make sure you launched the EAC‑less executable.</li>
+            <li>Attach to <span class="kbd">eldenring.exe</span> (not another process).</li>
+          </ul>
+        </div>
+      </details>
+      <details class="group">
+        <summary>Going online causes issues</summary>
+        <div class="inner">
+          <ul>
+            <li>Restore original <span class="kbd">start_protected_game.exe</span> and remove the copy.</li>
+            <li>Use a clean save — never a modded one.</li>
+          </ul>
+        </div>
+      </details>
+      <footer>Made for Josh — Offline use only.</footer>
+    </section>
+  </main>
+</div>
+
+<div class="warn" id="warn">⚠️ Don’t go online until you’ve restored your clean save and original files.</div>
+<script src='script_fixed.js'></script></body></html>
