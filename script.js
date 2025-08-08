@@ -248,3 +248,80 @@ renderTimer();
   }
   window.__showToast = showToast;
 })();
+
+
+// ---- Export to TXT (steps + sources) ----
+(function(){
+  const btn = document.getElementById('exportTXT');
+  if(!btn) return;
+
+  function clean(t){ return (t||'').replace(/\s+/g,' ').trim(); }
+
+  function collectText(){
+    let out = [];
+    const cards = document.querySelectorAll('main .card');
+    cards.forEach(card => {
+      const title = clean(card.querySelector('h2')?.textContent || '');
+      if(title){ out.push(title); out.push(''.padEnd(title.length, '=')); }
+      // Steps in .step blocks
+      card.querySelectorAll('.step').forEach(step => {
+        const num = clean(step.querySelector('.num')?.textContent || '');
+        const body = clean(step.textContent.replace(num,'') || '');
+        if(body) out.push(`- ${num?num+'. ':''}${body}`);
+      });
+      // Ordered/unordered lists inside details or sections
+      card.querySelectorAll('ol, ul').forEach(list => {
+        list.querySelectorAll('li').forEach(li => {
+          const txt = clean(li.textContent);
+          if(txt) out.push(`- ${txt}`);
+        });
+      });
+      // Callouts
+      card.querySelectorAll('.callout').forEach(el => {
+        const txt = clean(el.textContent);
+        if(txt) out.push(`NOTE: ${txt}`);
+      });
+      out.push(''); // blank line between cards
+    });
+
+    // Sources (unique external links)
+    const links = Array.from(document.querySelectorAll('a[href^="http://"], a[href^="https://"]'));
+    const seen = new Set();
+    const src = [];
+    links.forEach(a => {
+      const href = a.getAttribute('href');
+      if(!href || seen.has(href)) return;
+      seen.add(href);
+      const label = clean(a.textContent) || href;
+      src.push(`- ${label} — ${href}`);
+    });
+    if(src.length){
+      out.push('Sources');
+      out.push('-------');
+      out.push(...src);
+      out.push('');
+    }
+    return out.join('\n');
+  }
+
+  function downloadTxt(filename, text){
+    const blob = new Blob([text], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{
+      URL.revokeObjectURL(url);
+      a.remove();
+    }, 100);
+  }
+
+  btn.addEventListener('click', () => {
+    const txt = collectText();
+    const title = document.title.replace(/[^\w\-]+/g,'_').slice(0,60) || 'guide';
+    downloadTxt(`${title}.txt`, txt);
+    if(window.__showToast) window.__showToast('Downloaded TXT');
+  });
+})();
