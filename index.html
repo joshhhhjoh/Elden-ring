@@ -1,7 +1,10 @@
-<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'><title>Elden Ring — One Method (v3.6)</title><meta name='theme-color' content='#0c0f10'><link rel='stylesheet' href='styles.css'></head><body><header>
+<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'><title>Elden Ring — One Method (v3.6)</title><meta name='theme-color' content='#0c0f10'><link rel='stylesheet' href='styles.css'></head><body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="progressbar" aria-hidden="true"></div>
+<header>
   <div class="wrap">
     <div class="brand"><span class="dot"></span><span>ER — One Method Guide (v3.6)</span></div>
-    <div class="controls">
+    <div class="controls" title="Quick search: / or Ctrl/⌘+K">
       <button class="btn ghost menuBtn" id="menuBtn" title="Open menu">Menu</button>
       <button class="btn ghost" id="exportPDF" title="Export as PDF">PDF</button>
     </div>
@@ -20,7 +23,7 @@
       <a href="#troubleshoot">Troubleshooting</a>
   </nav></aside>
 
-  <main class="main">
+  <main class="main" id="main">
     <section class="card" id="overview">
       <h2>Overview (What you’re doing)</h2>
       <p class="callout">Run Elden Ring <span class="badge">offline</span> with EAC disabled, attach Cheat Engine to <span class="kbd">eldenring.exe</span>, spawn runes/items, and keep a clean save for online play.</p>
@@ -154,4 +157,19 @@
 <div id="toTop"><button class="btn" type="button">▲ Top <small>(smooth)</small></button></div>
 
 <div class="warn" id="warn">⚠️ Don’t go online until you’ve restored your clean save and original files.</div>
-<script src='script.js'></script></body></html>
+<script src='script.js'></script>
+<div id="cmdk" role="dialog" aria-modal="true" aria-labelledby="cmdk-title" hidden>
+  <div class="cmdk-backdrop"></div>
+  <div class="cmdk-box" role="document">
+    <div class="cmdk-head">
+      <strong id="cmdk-title">Jump to…</strong>
+      <span class="cmdk-hint">/ or ⌘K to open · Esc to close</span>
+    </div>
+    <input id="cmdk-input" type="text" aria-label="Type to filter sections" placeholder="Type a section name…" autocomplete="off">
+    <ul id="cmdk-list" role="listbox" aria-label="Sections"></ul>
+  </div>
+</div>
+
+
+<div id="toast" role="status" aria-live="polite" hidden></div>
+</body></html>

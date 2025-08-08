@@ -47,3 +47,31 @@ details.group .inner{padding:12px 14px}
 #toTop{position:fixed;right:16px;bottom:16px;z-index:1100;opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;transform:translateY(8px)}
 #toTop.show{opacity:1;pointer-events:auto;transform:none} #toTop .btn{border-radius:999px;padding:10px 14px} #toTop small{opacity:.8}
 @media print{header,.side,.warn,.controls,#toTop{display:none !important} body{background:#fff;color:#000} .card{break-inside:avoid}}
+
+
+/* a11y: skip link (invisible until focused) */
+.skip-link{position:absolute;left:-999px;top:auto;z-index:1001;background:#fff;color:#000;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--border)}
+.skip-link:focus{left:1rem;top:1rem}
+
+/* a11y: focus outline */
+:focus-visible{outline:2px solid currentColor; outline-offset:2px}
+
+/* top progress bar */
+#progressbar{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,#2ee6a6,#1dbb86);z-index:1200;transition:width .1s linear}
+
+/* command palette (hidden by default) */
+#cmdk[hidden]{display:none}
+#cmdk .cmdk-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);z-index:1198}
+#cmdk .cmdk-box{position:fixed;left:50%;top:12vh;transform:translateX(-50%);width:min(720px,92vw);background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.45);z-index:1199}
+#cmdk .cmdk-head{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border)}
+#cmdk #cmdk-input{width:100%;padding:12px;border:0;border-bottom:1px solid var(--border);background:#0e1316;color:var(--ink);font-size:16px;border-radius:12px 12px 0 0}
+#cmdk #cmdk-list{list-style:none;margin:0;padding:6px 6px 10px 6px;max-height:46vh;overflow:auto}
+#cmdk #cmdk-list li{padding:10px 10px;border-radius:8px;cursor:pointer}
+#cmdk #cmdk-list li[aria-selected="true"]{background:rgba(46,230,166,.12);border:1px solid var(--mint)}
+
+
+/* tiny toast (non-intrusive) */
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);max-width:80vw;
+background:var(--card);border:1px solid var(--border);color:var(--ink);padding:10px 14px;
+border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:1300;opacity:0;transition:opacity .15s ease, transform .15s ease}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
