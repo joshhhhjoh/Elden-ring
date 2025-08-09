@@ -1,257 +1,107 @@
-<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'><title>Elden Ring — One Method (v3.6)</title><meta name='theme-color' content='#0c0f10'><link rel='stylesheet' href='styles.css'></head><body>
-  <!-- Intro Overlay: Hacker typing -> REAPER -> Scythe slash -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>J//Gallery</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="shell">
+    <div class="brand">
+      <div class="logo">J//</div>
+      <h1>Gallery</h1>
+    </div>
+    <nav class="nav">
+      <div class="btn file-btn" aria-label="Add Photo">
+        Add Photo
+        <input id="uploadInput" type="file" accept="image/*,image/heic,image/heif" capture="environment" multiple />
+      </div>
+      <button id="addUrl" class="btn ghost">Add URL</button>
+      <label class="btn" for="importJson">Import JSON</label>
+      <button id="exportJson" class="btn">Export</button>
+      <button id="toggleEdit" class="btn">Edit: Off</button>
+      <button id="saveLocal" class="btn">Save</button>
+      <button id="newGallery" class="btn danger">New</button>
+    </nav>
+  </header>
 
+  <section class="panel shell">
+    <div class="filters">
+      <input id="search" class="search" type="search" placeholder="Search title, description, tags…" />
+      <span class="muted" id="count"></span>
+    </div>
+    <div class="titlebar">
+      <input id="galleryTitle" class="titleInput" placeholder="Gallery title" />
+    </div>
+  </section>
 
-<div id="progressbar" aria-hidden="true"></div>
-<header>
-  <div class="wrap">
-    <div class="brand"><span class="dot"></span><span>ER — One Method Guide (v3.6)</span></div>
-    <div class="controls" title="Quick search: / or Ctrl/⌘+K">
-      <button class="btn ghost menuBtn" id="menuBtn" title="Open menu">Menu</button>
-      <button class="btn ghost" id="exportPDF" title="Export as PDF">PDF</button>
-      <button class="btn ghost" id="exportTXT" title="Download all steps as .txt">TXT</button>
+  <main class="shell">
+    <ul id="grid" class="grid" aria-live="polite"></ul>
+  </main>
+
+  <footer class="shell foot">
+    <span class="muted">Autosaves on this device. Export JSON to back up or share.</span>
+  </footer>
+
+  <!-- Inputs -->
+  <input type="file" id="importJson" accept=".json,application/json" class="hidden-import" />
+
+  <!-- Templates -->
+  <template id="cardTemplate">
+    <li class="card" draggable="false">
+      <div class="media">
+        <img class="thumb" alt="" />
+        <div class="overlay">
+          <button class="icon replace" title="Replace" aria-label="Replace image">↻</button>
+          <button class="icon danger remove" title="Remove" aria-label="Remove image">✕</button>
+        </div>
+      </div>
+      <div class="meta">
+        <input class="title" placeholder="Title" />
+        <textarea class="desc" rows="2" placeholder="Description"></textarea>
+        <input class="tags" placeholder="tags, comma,separated" />
+        <div class="orderRow">
+          <button class="btn sm up" title="Move up">▲</button>
+          <button class="btn sm down" title="Move down">▼</button>
+        </div>
+      </div>
+    </li>
+  </template>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" hidden>
+    <button id="lightboxClose" class="icon close" aria-label="Close">✕</button>
+    <img id="lightboxImg" alt="" />
+    <div class="lightboxMeta">
+      <div id="lightboxTitle" class="lbTitle"></div>
+      <div id="lightboxDesc" class="lbDesc"></div>
     </div>
   </div>
-</header>
 
-<div class="container">
-  <aside class="side"><nav class="nav">
-      <a href="#overview">Overview</a>
-      <a href="#prep">Prep</a>
-      <a href="#eac">Disable EAC</a>
-      <a href="#launch">Launch & Attach CE</a>
-      <a href="#spawn">Spawn Runes/Items</a>
-      <a href="#tables-online-safe">Tables & Online‑Safe Runes</a>
-      <a href="#dupe">Duplicate Loop</a>
-      <a href="#online">Clean Online Return</a>
-      <a href="#troubleshoot">Troubleshooting</a>
-      <a href="#resources">Resources &amp; Links</a>
-  </nav></aside>
-
-  <main class="main" id="main">
-    <section class="card" id="overview">
-      <h2>Overview (What you’re doing)</h2>
-      <p class="callout">Run Elden Ring <span class="badge">offline</span> with EAC disabled, attach Cheat Engine to <span class="kbd">eldenring.exe</span>, spawn runes/items, and keep a clean save for online play.</p>
-      <div class="meter" title="Offline Safety Meter"><span id="meterbar"></span></div>
-      <small class="muted">Save path: <span class="kbd">C:\Users\&lt;You&gt;\AppData\Roaming\EldenRing\&lt;SteamID&gt;\ER0000.sl2</span></small>
-    </section>
-
-    <section class="card" id="prep">
-      <h2>Prep (once)</h2>
-      <div class="grid two">
-        <div>
-          <div class="step"><div class="num">1</div><div><b>Back up your save</b> (<span class="kbd">ER0000.sl2</span>) to a safe folder.</div></div>
-          <div class="step"><div class="num">2</div><div>Set <b>Steam → Go Offline</b> and restart Steam.</div></div>
-        </div>
-        <div>
-          <div class="check"><input type="checkbox" id="c1"><label for="c1">Save backed up</label></div>
-          <div class="check"><input type="checkbox" id="c2"><label for="c2">Steam is Offline</label></div>
-        </div>
+  <!-- Export Modal -->
+  <dialog id="exportDlg">
+    <form method="dialog" class="dlg">
+      <h3>Export JSON</h3>
+      <textarea id="exportText" readonly></textarea>
+      <div class="dlgRow">
+        <button id="copyBtn" class="btn">Copy</button>
+        <a id="downloadLink" class="btn" download="gallery.json">Download</a>
+        <button class="btn" value="close">Close</button>
       </div>
-    </section>
+    </form>
+  </dialog>
 
-    <section class="card" id="eac">
-      <h2>Disable Easy Anti‑Cheat</h2>
-      <div class="grid two">
-        <div>
-          <div class="step"><div class="num">1</div><div>Open <span class="kbd">...\Steam\steamapps\common\ELDEN RING\Game\</span></div></div>
-          <div class="step"><div class="num">2</div><div>Rename <span class="kbd">start_protected_game.exe</span> → <span class="kbd">start_protected_game.exe.bak</span></div></div>
-          <div class="step"><div class="num">3</div><div>Copy <span class="kbd">eldenring.exe</span> and rename that copy to <span class="kbd">start_protected_game.exe</span></div></div>
-          <p class="callout">Launching now uses your copy (no EAC) so CE can attach safely.</p>
-        </div>
-        <div class="check"><input type="checkbox" id="c3"><label for="c3">EAC disabled</label></div>
-      </div>
-    </section>
-
-    <section class="card" id="launch">
-      <h2>Launch & Attach Cheat Engine</h2>
-      <div class="grid two">
-        <div>
-          <div class="step"><div class="num">1</div><div>Launch via your new <span class="kbd">start_protected_game.exe</span>.</div></div>
-          <div class="step"><div class="num">2</div><div>Open Cheat Engine → attach to <span class="kbd">eldenring.exe</span>.</div></div>
-          <div class="step"><div class="num">3</div><div>Load your table (ItemGib / AddSoul / TGA) and enable needed scripts.</div></div>
-        </div>
-        <div>
-          <details class="group" open>
-            <summary>Quick checklist</summary>
-            <div class="inner">
-              <div class="check"><input type="checkbox" id="l1"><label for="l1">Steam still offline</label></div>
-              <div class="check"><input type="checkbox" id="l2"><label for="l2">EAC‑less exe launched</label></div>
-              <div class="check"><input type="checkbox" id="l3"><label for="l3">CE attached to process</label></div>
-            </div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" id="spawn">
-      <h2>Spawn Runes/Items</h2>
-      <details class="group" open>
-        <summary>Runes (AddSoul)</summary>
-        <div class="inner">
-          <ol>
-            <li>Load a Rune Injection table in CE.</li>
-            <li>Enable <b>AddSoul</b>, enter amount, activate.</li>
-            <li>Tab back into the game — runes are applied.</li>
-          </ol>
-        </div>
-      </details>
-      <details class="group">
-        <summary>Items (ItemGib)</summary>
-        <div class="inner">
-          <ol>
-            <li>Load an Item Spawning table.</li>
-            <li>Enable <b>ItemGib</b>, paste a valid Item ID + quantity.</li>
-            <li>Activate → pick up the spawned item in‑game.</li>
-          </ol>
-        </div>
-      </details>
-      <details class="group">
-        <summary>Item IDs</summary>
-        <div class="inner">
-          <ul>
-            <li><a href="https://github.com/veeenu/eldenring-practice-tool/blob/main/xtask/src/codegen/item_ids.yml" target="_blank" rel="noopener">Master Item ID List</a></li>
-            <li><a href="https://github.com/Ariescyn/EldenRing-Save-Manager/issues/62" target="_blank" rel="noopener">DLC Item IDs discussion</a></li>
-          </ul>
-        </div>
-      </details>
-    </section>
-
-    
-    <section class="card" id="tables-online-safe">
-      <h2>Using CE Tables + Online‑Safe Runes (Offline Only)</h2>
-
-      <details class="group">
-        <summary>What a CE Table (.CT) is</summary>
-        <div class="inner">
-          <ul>
-            <li>A <b>.CT</b> file is a Cheat Engine script bundle (tables + scripts + hotkeys).</li>
-            <li>Different authors: Hexinton, Marcus101RR, The Grand Archives (TGA), etc.</li>
-            <li>Tables often require a specific game version/DLC. Pick one that matches your build.</li>
-          </ul>
-        </div>
-      </details>
-
-      <details class="group">
-        <summary>How to load and enable scripts</summary>
-        <div class="inner">
-          <ol>
-            <li>Launch Elden Ring <b>offline</b> with <b>EAC disabled</b>.</li>
-            <li>Open Cheat Engine → <b>File → Open</b> → choose your <span class="kbd">.CT</span> table.</li>
-            <li>Click the PC icon in CE and attach to <span class="kbd">eldenring.exe</span>.</li>
-            <li>In the table list, <b>tick the master/enable script</b> (AOB/enable) until it says <em>Activated</em>.</li>
-            <li>Tick the specific modules you need: <b>ItemGib</b>, <b>AddSoul</b>, etc.</li>
-            <li>Most tables show hotkeys in the Description column; right‑click to change if you want.</li>
-          </ol>
-        </div>
-      </details>
-
-      <details class="group">
-        <summary>Give yourself runes (offline) — online‑safe workflow</summary>
-        <div class="inner">
-          <ol>
-            <li>Back up your clean save (<span class="kbd">ER0000.sl2</span>) somewhere safe.</li>
-            <li>With Steam offline and EAC disabled, enable <b>AddSoul</b> in CE.</li>
-            <li>Enter a rune amount (e.g., <b>500000</b>) and run the script while in‑game.</li>
-            <li><b>Spend the runes offline</b> (leveling, purchases, etc.).</li>
-            <li>When finished, <b>restore your clean save</b> and put back the original <span class="kbd">start_protected_game.exe</span> before going online.</li>
-          </ol>
-          <p class="callout"><b>Important:</b> Never go online with a save that was edited or created while EAC was disabled. Always return to your <b>clean save</b> first.</p>
-        </div>
-      </details>
-
-      <details class="group">
-        <summary>Quick troubleshooting</summary>
-        <div class="inner">
-          <ul>
-            <li><b>Script won’t activate:</b> Attach after the main menu, or use a table version that matches your patch.</li>
-            <li><b>CE can’t see the process:</b> Verify you launched the EAC‑less executable.</li>
-            <li><b>No effect in game:</b> Re‑enable the script, re‑enter values, and try a small in‑game action to trigger a refresh.</li>
-          </ul>
-        </div>
-      </details>
-    </section>
-
-
-    <section class="card" id="dupe">
-      <h2>Duplicate Loop (optional)</h2>
-      <ol>
-        <li>Drop spawned items on the ground.</li>
-        <li>Quit the game.</li>
-        <li>Restore your backup over <span class="kbd">ER0000.sl2</span>.</li>
-        <li>Launch offline again → pick up → repeat.</li>
-      </ol>
-      <p class="callout"><b>Pro tip:</b> Keep <b>CLEAN_SAVE</b> (for online) and <b>WORKING_SAVE</b> (for offline edits).</p>
-    </section>
-
-    <section class="card" id="online">
-      <h2>Clean Online Return</h2>
-      <ol>
-        <li>Delete the copied <span class="kbd">start_protected_game.exe</span>.</li>
-        <li>Rename your <span class="kbd">.bak</span> back to <span class="kbd">start_protected_game.exe</span>.</li>
-        <li>Restore your clean, unmodded save.</li>
-        <li>Set Steam online and launch normally.</li>
-      </ol>
-      <div class="check"><input type="checkbox" id="cleanSave"><label for="cleanSave">I restored my clean save</label></div>
-    </section>
-
-    <section class="card" id="troubleshoot">
-      <h2>Troubleshooting</h2>
-      <details class="group" open>
-        <summary>Game won’t launch offline</summary>
-        <div class="inner">
-          <ul><li>Recheck Steam’s Offline mode (restart Steam).</li><li>Verify the EAC rename/copy steps.</li></ul>
-        </div>
-      </details>
-      <details class="group">
-        <summary>CE can’t attach</summary>
-        <div class="inner">
-          <ul><li>Confirm you launched the EAC‑less executable.</li><li>Attach to the correct process (<span class="kbd">eldenring.exe</span>).</li></ul>
-        </div>
-      </details>
-      <footer>Made for Josh — Offline use only.</footer>
-    </section>
-  
-
-<section class="card" id="resources">
-  <h2>Resources &amp; Links</h2>
-  <ul>
-  <ul>
-    <li><a href="https://www.nexusmods.com/eldenring/mods/48" target="_blank" rel="noopener">Hexinton – Ultimate CE Table</a></li>
-    <li><a href="https://www.nexusmods.com/eldenring/mods/54" target="_blank" rel="noopener">Marcus101RR – CE Table</a></li>
-    <li><a href="https://fearlessrevolution.com/viewtopic.php?t=19348" target="_blank" rel="noopener">FearlessRevolution – Ultimate Table Thread</a></li>
-    <li><a href="https://github.com/The-Grand-Archives/Elden-Ring-CT-TGA" target="_blank" rel="noopener">The Grand Archives – GitHub Repo</a></li>
-    <li><a href="https://github.com/The-Grand-Archives/Elden-Ring-CT-TGA/releases" target="_blank" rel="noopener">The Grand Archives – Releases</a></li>
-    <li><a href="https://github.com/Nordgaren/Elden-Ring-Debug-Tool" target="_blank" rel="noopener">Nordgaren – Elden Ring Debug Tool</a></li>
-    <li><a href="https://github.com/AltimorTASDK/EldenRing-ItemIDList" target="_blank" rel="noopener">Item IDs – Master List</a></li>
-    <li><a href="https://github.com/Ariescyn/EldenRing-Save-Manager/issues/62" target="_blank" rel="noopener">DLC Item IDs (Discussion)</a></li>
-  </ul>
-
-</section>
-
-
-</main>
-</div>
-
-<!-- Back to Top -->
-<div id="toTop"><button class="btn" type="button">▲ Top <small>(smooth)</small></button></div>
-
-<div class="warn" id="warn">⚠️ Don’t go online until you’ve restored your clean save and original files.</div>
-<script src='script.js'></script>
-<div id="cmdk" role="dialog" aria-modal="true" aria-labelledby="cmdk-title" hidden>
-  <div class="cmdk-backdrop"></div>
-  <div class="cmdk-box" role="document">
-    <div class="cmdk-head">
-      <strong id="cmdk-title">Jump to…</strong>
-      <span class="cmdk-hint">/ or ⌘K to open · Esc to close</span>
+  <!-- Mobile bottom bar -->
+  <div class="dock">
+    <div class="dock-file-btn">
+      Photos/Camera
+      <input id="dockUpload" type="file" accept="image/*,image/heic,image/heif" capture="environment" multiple />
     </div>
-    <input id="cmdk-input" type="text" aria-label="Type to filter sections" placeholder="Type a section name…" autocomplete="off">
-    <ul id="cmdk-list" role="listbox" aria-label="Sections"></ul>
+    <button id="dockUrl" class="dock-btn">Add URL</button>
+    <button id="dockExport" class="dock-btn">Export</button>
   </div>
-</div>
 
-
-<div id="toast" role="status" aria-live="polite" hidden></div>
-<footer style="text-align:center; padding:10px; font-size:0.9em; opacity:0.8;">Disclaimer: This site content was AI generated.</footer>
-
-</body></html>
+  <script src="script.js"></script>
+</body>
+</html>
