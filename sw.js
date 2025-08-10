@@ -1,5 +1,5 @@
 /* Service Worker: offline shell for josh-gal */
-const CACHE = 'josh-gal-v4';
+const CACHE = 'josh-gal-v5';
 const CORE = ['./','./index.html','./style.css','./app.js','./preview.html','./preview.js','./manifest.webmanifest','./sw.js'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => k!==CACHE?caches.delete(k):null)))); self.clients.claim(); });

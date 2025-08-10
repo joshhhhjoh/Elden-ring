@@ -139,7 +139,41 @@ let activeFavOnly = false;
     }
   }
 
-  async function addFiles(fileList){
+  
+  // --- Fallback: compress a File -> {fullDataURL, thumbDataURL} using canvas
+  async function compressToDataURLs(file, maxFullW=2200, fullQ=0.85, maxThumbW=800, thumbQ=0.82){
+    const dataURL = await new Promise((res, rej)=>{
+      const fr = new FileReader();
+      fr.onerror = () => rej(new Error('FileReader failed'));
+      fr.onload = () => res(fr.result);
+      fr.readAsDataURL(file);
+    });
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = dataURL;
+    if (img.decode) { try { await img.decode(); } catch(e){} }
+    await new Promise(r => { if (img.complete) return r(); img.onload = ()=>r(); img.onerror = ()=>r(); });
+
+    function drawScaled(maxW, q){
+      const naturalW = img.naturalWidth || img.width || 1;
+      const naturalH = img.naturalHeight || img.height || 1;
+      const ratio = naturalW / naturalH;
+      const w = Math.min(maxW, naturalW);
+      const h = Math.round(w / ratio);
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const ctx = c.getContext('2d', { alpha: false });
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, w, h);
+      return c.toDataURL('image/jpeg', q);
+    }
+
+    const fullDataURL = drawScaled(maxFullW, fullQ);
+    const thumbDataURL = drawScaled(maxThumbW, thumbQ);
+    return { fullDataURL, thumbDataURL };
+  }
+async function addFiles(fileList){
     const files = [...(fileList||[])];
     let order = items.reduce((m, it) => Math.max(m, it.order||0), 0);
     for (const f of files){
