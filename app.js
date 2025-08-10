@@ -84,8 +84,8 @@ let activeFavOnly = false;
   }
 
   // Events
-  upPhotos.onchange = e => addFiles(e.target.files);
-  upCam.onchange = e => addFiles(e.target.files);
+  if (upPhotos) upPhotos.addEventListener('change', handlePhotosChange);
+  if (upCam) upCam.addEventListener('change', handleCameraChange);
   exportAllBtn.onclick = () => doExport(items);
   exportSelBtn.onclick = () => {
     const arr = items.filter(it => selected.has(it.id));
@@ -140,44 +140,33 @@ let activeFavOnly = false;
   }
 
   
-  // --- Fallback: compress a File -> {fullDataURL, thumbDataURL} using canvas
-  async function compressToDataURLs(file, maxFullW=2200, fullQ=0.85, maxThumbW=800, thumbQ=0.82){
-    const dataURL = await new Promise((res, rej)=>{
-      const fr = new FileReader();
-      fr.onerror = () => rej(new Error('FileReader failed'));
-      fr.onload = () => res(fr.result);
-      fr.readAsDataURL(file);
-    });
-    const img = new Image();
-    img.decoding = 'async';
-    img.src = dataURL;
-    if (img.decode) { try { await img.decode(); } catch(e){} }
-    await new Promise(r => { if (img.complete) return r(); img.onload = ()=>r(); img.onerror = ()=>r(); });
-
-    function drawScaled(maxW, q){
-      const naturalW = img.naturalWidth || img.width || 1;
-      const naturalH = img.naturalHeight || img.height || 1;
-      const ratio = naturalW / naturalH;
-      const w = Math.min(maxW, naturalW);
-      const h = Math.round(w / ratio);
-      const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      const ctx = c.getContext('2d', { alpha: false });
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, 0, 0, w, h);
-      return c.toDataURL('image/jpeg', q);
+  // --- iPhone-safe: robust file input handlers ---
+  async function handlePhotosChange(e){
+    try{
+      const files = [...(e.target && e.target.files ? e.target.files : [])];
+      if (!files.length) return;
+      if (typeof search !== 'undefined' && search) { search.value = ''; } // ensure new items show
+      await addFiles(files);
+    } finally {
+      if (e && e.target) e.target.value = ''; // allow re-selecting the same photo
     }
-
-    const fullDataURL = drawScaled(maxFullW, fullQ);
-    const thumbDataURL = drawScaled(maxThumbW, thumbQ);
-    return { fullDataURL, thumbDataURL };
   }
-async function addFiles(fileList){
+  async function handleCameraChange(e){
+    try{
+      const files = [...(e.target && e.target.files ? e.target.files : [])];
+      if (!files.length) return;
+      if (typeof search !== 'undefined' && search) { search.value = ''; }
+      await addFiles(files);
+    } finally {
+      if (e && e.target) e.target.value = '';
+    }
+  }
+
+  async function addFiles(fileList){
     const files = [...(fileList||[])];
     let order = items.reduce((m, it) => Math.max(m, it.order||0), 0);
     for (const f of files){
-      const { fullDataURL, thumbDataURL } = await compressToDataURLs(f, 2200, 0.85, 800, 0.82);
+      const { fullDataURL, thumbDataURL } = await compressToDataURLsSafe(f, 2200, 0.85, 800, 0.82);
       const it = { id: crypto.randomUUID(), order: ++order, title: f.name.replace(/\.[^.]+$/, ''), desc:'', tags:[], dataURL: thumbDataURL, full: fullDataURL, fav:false };
       items.push(it);
     }
@@ -248,7 +237,7 @@ async function addFiles(fileList){
         const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
         inp.onchange = async ev => {
           const f = ev.target.files?.[0]; if (!f) return;
-          const { fullDataURL, thumbDataURL } = await compressToDataURLs(f, 2200, 0.85, 800, 0.82);
+          const { fullDataURL, thumbDataURL } = await compressToDataURLsSafe(f, 2200, 0.85, 800, 0.82);
           it.full = fullDataURL; it.dataURL = thumbDataURL; render(); persist();
         };
         inp.click();
@@ -366,34 +355,19 @@ function openViewerAt(idx){
   });
 
   let scale=1, startScale=1, panX=0, panY=0, lastTouches=[], lastTapTime=0;
-  let __justZoomedOnce=false, __swipedThisGesture=false, __slideshowResumeTimer=null;
   function resetZoom(){ scale = 1; panX = panY = 0; applyTransform(); }
-  function applyTransform(){
-    if (scale === 1){
-      vImg.style.transform = 'none';
-    } else {
-      vImg.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
-    }
-  }
+  function applyTransform(){ vImg.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`; }
   function distance(t1, t2){ const dx=t2.clientX - t1.clientX; const dy=t2.clientY - t1.clientY; return Math.hypot(dx,dy); }
 
-  
-  function _pauseSlideshowForInteraction(){
-    stopSlideshow();
-    if (__slideshowResumeTimer){ clearTimeout(__slideshowResumeTimer); __slideshowResumeTimer=null; }
-    __slideshowResumeTimer = setTimeout(()=>{ startSlideshow(); }, 3500);
-  }
-viewer.addEventListener('touchstart', onTouchStart, {passive:false});
+  viewer.addEventListener('touchstart', onTouchStart, {passive:false});
   viewer.addEventListener('touchmove', onTouchMove, {passive:false});
   viewer.addEventListener('touchend', onTouchEnd, {passive:false});
 
   function onTouchStart(e){
-    _pauseSlideshowForInteraction();
-    __swipedThisGesture=false;
     if (!viewer.classList.contains('on')) return;
     if (e.touches.length === 1){
       const now = Date.now();
-      if (now - lastTapTime < 300){ e.preventDefault(); scale = (scale > 1) ? 1 : 2.0; panX = panY = 0; applyTransform(); __justZoomedOnce = true; setTimeout(()=>{ __justZoomedOnce=false; }, 250); }
+      if (now - lastTapTime < 300){ e.preventDefault(); scale = (scale > 1) ? 1 : 2.0; panX = panY = 0; applyTransform(); }
       lastTapTime = now;
       lastTouches = [e.touches[0]];
     } else if (e.touches.length === 2){
@@ -403,7 +377,6 @@ viewer.addEventListener('touchstart', onTouchStart, {passive:false});
     }
   }
   function onTouchMove(e){
-    _pauseSlideshowForInteraction();
     if (!viewer.classList.contains('on')) return;
     if (e.touches.length === 2){
       e.preventDefault();
@@ -423,14 +396,13 @@ viewer.addEventListener('touchstart', onTouchStart, {passive:false});
     }
   }
   function onTouchEnd(e){
-    _pauseSlideshowForInteraction();
     if (!viewer.classList.contains('on')) return;
-    if (!__swipedThisGesture && !__justZoomedOnce && scale === 1 && e.changedTouches.length === 1){
+    if (scale === 1 && e.changedTouches.length === 1){
       const t = e.changedTouches[0];
       const last = lastTouches[0];
       if (last){
         const dx = t.clientX - last.clientX;
-        if (Math.abs(dx) > 40){ __swipedThisGesture = true; if (dx < 0) next(); else prev(); }
+        if (Math.abs(dx) > 40){ if (dx < 0) next(); else prev(); }
       }
     }
     lastTouches = [];
