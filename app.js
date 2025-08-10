@@ -332,19 +332,34 @@ function openViewerAt(idx){
   });
 
   let scale=1, startScale=1, panX=0, panY=0, lastTouches=[], lastTapTime=0;
+  let __justZoomedOnce=false, __swipedThisGesture=false, __slideshowResumeTimer=null;
   function resetZoom(){ scale = 1; panX = panY = 0; applyTransform(); }
-  function applyTransform(){ vImg.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`; }
+  function applyTransform(){
+    if (scale === 1){
+      vImg.style.transform = 'none';
+    } else {
+      vImg.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    }
+  }
   function distance(t1, t2){ const dx=t2.clientX - t1.clientX; const dy=t2.clientY - t1.clientY; return Math.hypot(dx,dy); }
 
-  viewer.addEventListener('touchstart', onTouchStart, {passive:false});
+  
+  function _pauseSlideshowForInteraction(){
+    stopSlideshow();
+    if (__slideshowResumeTimer){ clearTimeout(__slideshowResumeTimer); __slideshowResumeTimer=null; }
+    __slideshowResumeTimer = setTimeout(()=>{ startSlideshow(); }, 3500);
+  }
+viewer.addEventListener('touchstart', onTouchStart, {passive:false});
   viewer.addEventListener('touchmove', onTouchMove, {passive:false});
   viewer.addEventListener('touchend', onTouchEnd, {passive:false});
 
   function onTouchStart(e){
+    _pauseSlideshowForInteraction();
+    __swipedThisGesture=false;
     if (!viewer.classList.contains('on')) return;
     if (e.touches.length === 1){
       const now = Date.now();
-      if (now - lastTapTime < 300){ e.preventDefault(); scale = (scale > 1) ? 1 : 2.0; panX = panY = 0; applyTransform(); }
+      if (now - lastTapTime < 300){ e.preventDefault(); scale = (scale > 1) ? 1 : 2.0; panX = panY = 0; applyTransform(); __justZoomedOnce = true; setTimeout(()=>{ __justZoomedOnce=false; }, 250); }
       lastTapTime = now;
       lastTouches = [e.touches[0]];
     } else if (e.touches.length === 2){
@@ -354,6 +369,7 @@ function openViewerAt(idx){
     }
   }
   function onTouchMove(e){
+    _pauseSlideshowForInteraction();
     if (!viewer.classList.contains('on')) return;
     if (e.touches.length === 2){
       e.preventDefault();
@@ -373,13 +389,14 @@ function openViewerAt(idx){
     }
   }
   function onTouchEnd(e){
+    _pauseSlideshowForInteraction();
     if (!viewer.classList.contains('on')) return;
-    if (scale === 1 && e.changedTouches.length === 1){
+    if (!__swipedThisGesture && !__justZoomedOnce && scale === 1 && e.changedTouches.length === 1){
       const t = e.changedTouches[0];
       const last = lastTouches[0];
       if (last){
         const dx = t.clientX - last.clientX;
-        if (Math.abs(dx) > 40){ if (dx < 0) next(); else prev(); }
+        if (Math.abs(dx) > 40){ __swipedThisGesture = true; if (dx < 0) next(); else prev(); }
       }
     }
     lastTouches = [];

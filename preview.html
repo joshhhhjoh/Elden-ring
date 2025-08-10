@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>J Gallery — Preview</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#0b0b0b"/>
+</head>
+<body>
+  <header class="shell">
+    <div class="brand">
+      <div class="logo">J//</div>
+      <h1>Preview</h1>
+    </div>
+    <nav class="nav" aria-label="Toolbar">
+      <span class="badge">Read‑only preview</span>
+      <a class="btn sm" href="./index.html" style="text-decoration:none">Edit</a>
+    </nav>
+  </header>
+
+  <section class="panel shell">
+    <div class="row">
+      <input id="galleryTitle" class="titleInput" placeholder="Gallery title" disabled />
+      <span class="muted" id="count"></span>
+    </div>
+  </section>
+
+  <main class="shell">
+    <ul id="grid" class="grid" aria-live="polite"></ul>
+  </main>
+
+  <!-- Viewer (same structure for consistency) -->
+  <div id="viewer" aria-hidden="true">
+    <button type="button" class="v-close" aria-label="Close">✕</button>
+    <button type="button" class="v-prev" aria-label="Previous">‹</button>
+    <img class="v-img" alt="" />
+    <button type="button" class="v-next" aria-label="Next">›</button>
+    <div class="v-count"></div>
+    <div class="v-fav" title="Favorite">★</div>
+  </div>
+
+  <script src="preview.js"></script>
+</body>
+</html>
