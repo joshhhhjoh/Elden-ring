@@ -1,200 +1,199 @@
-<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'><title>Elden Ring — One Method (v3.6)</title><meta name='theme-color' content='#0c0f10'><link rel='stylesheet' href='styles.css'></head><body>
-  <!-- Intro Overlay: Hacker typing -> REAPER -> Scythe slash -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>J Gallery</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="shell">
+    <div class="brand">
+      <div class="logo">J//</div>
+      <h1>Gallery</h1>
+    </div>
+    <nav class="nav" aria-label="Toolbar">
+      <!-- Add from Photos -->
+      <label class="icon-btn file-btn" title="Add from Photos">
+        <input id="uploadPhotos" type="file" accept="image/*" multiple aria-label="Add from Photos" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+          <path d="M3 15l4-4 5 5 4-4 5 5"></path>
+        </svg>
+        <span class="icon-label">Photos</span>
+</label>
+      <!-- Camera -->
+      <label class="icon-btn file-btn" title="Take Photo">
+        <input id="uploadCamera" type="file" accept="image/*" capture="environment" aria-label="Take Photo" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 7h3l2-2h6l2 2h3v12H4z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        <span class="icon-label">Camera</span>
+</label>
+      <!-- Save -->
+      <button type="button" id="saveNow" class="icon-btn" title="Save (download JSON)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><rect x="4" y="3" width="16" height="18" rx="2"></rect>
+        </svg>
+        <span class="icon-label">Save</span>
+</button>
+      <!-- Export All -->
+      <button type="button" id="exportAll" class="icon-btn" title="Export All">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 12v9"></path><path d="M7 16l5 5 5-5"></path><path d="M5 10h14"></path>
+        </svg>
+        <span class="icon-label">Export</span>
+</button>
+      <!-- Export Selected -->
+      <button type="button" id="exportSelected" class="icon-btn" title="Export Selected">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 12v9"></path><path d="M7 16l5 5 5-5"></path>
+          <polyline points="4,8 8,12 14,6"></polyline>
+        </svg>
+        <span class="icon-label">Export Sel</span>
+</button>
+      <!-- Import (Replace) -->
+      <label class="icon-btn file-btn" title="Import (Replace)" for="importJson">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3v9"></path><path d="M7 7l5-5 5 5"></path><path d="M5 14h14v7H5z"></path>
+        </svg>
+        <span class="icon-label">Import</span>
+</label>
+      <!-- Append JSON -->
+      <label class="icon-btn file-btn" title="Append JSON" for="appendJson">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14"></path><path d="M5 12h14"></path><rect x="3" y="3" width="18" height="18" rx="2"></rect>
+        </svg>
+        <span class="icon-label">Append</span>
+</label>
+      <!-- New -->
+      <button type="button" id="newGallery" class="icon-btn" title="New Gallery">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18"></path><path d="M8 6v14"></path><path d="M16 6v14"></path><path d="M5 6l1-2h12l1 2"></path>
+        </svg>
+        <span class="icon-label">New</span>
+</button>
 
+      <span id="saveStatus" class="badge" style="margin-left:6px">Not saved</span>
+<button type="button" id="settingsBtn" class="icon-btn" title="Settings" aria-haspopup="dialog" aria-controls="settingsPanel">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="3"></circle>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.02.02a2 2 0 1 1-2.83 2.83l-.02-.02a1.65 1.65 0 0 0-1.82.33 1.65 1.65 0 0 0-.49 1.17V22a2 2 0 1 1-4 0v-.02a1.65 1.65 0 0 0-1.17-.49 1.65 1.65 0 0 0-1.82.33l-.02.02a2 2 0 1 1-2.83-2.83l.02-.02A1.65 1.65 0 0 0 5 15.4 1.65 1.65 0 0 0 4 14H4a2 2 0 1 1 0-4h.02c.61 0 1.16-.47 1.35-1.08.21-.64 0-1.33-.49-1.82l-.02-.02a2 2 0 1 1 2.83-2.83l.02.02c.49.49 1.18.7 1.82.49C10.53 4.18 11 3.63 11 3.02V3a2 2 0 1 1 4 0v.02c0 .61.47 1.16 1.08 1.35.64.21 1.33 0 1.82-.49l.02-.02a2 2 0 1 1 2.83 2.83l-.02.02c-.49.49-.7 1.18-.49 1.82.19.61.74 1.08 1.35 1.08H22a2 2 0 1 1 0 4h-.02c-.61 0-1.16.47-1.35 1.08z"></path>
+  </svg>
+  <span class="icon-label">Settings</span>
+</button>
+    </nav>
+  </header>
 
-<div id="progressbar" aria-hidden="true"></div>
-<header>
-  <div class="wrap">
-    <div class="brand"><span class="dot"></span><span>ER — One Method Guide (v3.6)</span></div>
-    <div class="controls" title="Quick search: / or Ctrl/⌘+K">
-      <button class="btn ghost menuBtn" id="menuBtn" title="Open menu">Menu</button>
-      <button class="btn ghost" id="exportPDF" title="Export as PDF">PDF</button>
-      <button class="btn ghost" id="exportTXT" title="Download all steps as .txt">TXT</button>
+  <section class="panel shell">
+    <div class="row">
+      <input id="sessionName" class="titleInput" placeholder="Session name (used in filenames)" />
+      <input id="galleryTitle" class="titleInput" placeholder="Gallery title" />
+      <span class="muted" id="count"></span>
+    </div>
+    <div class="filters">
+      <input id="search" class="search" type="search" placeholder="Search title, description, tags…" />
+      <div id="tagFilters" class="tagFilters"></div>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button type="button" id="selectAll" class="btn sm">Select All</button>
+        <button type="button" id="clearSel" class="btn sm">Clear</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="shell">
+    <ul id="grid" class="grid" aria-live="polite"></ul>
+  </main>
+
+  <footer class="shell foot">
+    <span class="muted">Classic layout • Icon toolbar • Offline • JSON-first • Pro viewer with pinch/double‑tap/swipe/favorites.</span>
+  </footer>
+
+  <input type="file" id="importJson" accept=".json,application/json" class="hidden-import" style="position:fixed;left:-9999px;top:-9999px;opacity:0;width:1px;height:1px" />
+  <input type="file" id="appendJson" accept=".json,application/json" class="hidden-import" style="position:fixed;left:-9999px;top:-9999px;opacity:0;width:1px;height:1px" />
+  <datalist id="allTags"></datalist>
+
+  <template id="cardTemplate">
+    <li class="card">
+      <label class="sel">
+        <input type="checkbox" class="pick" />
+        <span></span>
+      </label>
+      <div class="media">
+        <img class="thumb" alt="Image" />
+        <button type="button" class="fav" title="Favorite">★</button>
+      </div>
+      <div class="meta">
+        <input class="title" placeholder="Title" />
+        <textarea class="desc" rows="2" placeholder="Description"></textarea>
+        <input class="tags" placeholder="tags, comma,separated" list="allTags" />
+        <div class="tagchips"></div>
+        <div class="actions">
+          <button type="button" class="btn sm up" title="Move up">▲</button>
+          <button type="button" class="btn sm down" title="Move down">▼</button>
+          <button type="button" class="btn sm replace" title="Replace">Replace</button>
+          <button type="button" class="btn sm danger remove" title="Remove">Remove</button>
+        </div>
+      </div>
+    </li>
+  </template>
+
+  <!-- Full-screen viewer -->
+  <div id="viewer" aria-hidden="true">
+    <button type="button" class="v-close" aria-label="Close">✕</button>
+    <button type="button" class="v-prev" aria-label="Previous">‹</button>
+    <img class="v-img" alt="" />
+    <button type="button" class="v-next" aria-label="Next">›</button>
+    <div class="v-count"></div>
+    <div class="v-fav" title="Favorite">★</div>
+  </div>
+
+  <div id="log" style="position:fixed;bottom:12px;left:12px;right:12px;max-height:40vh;overflow:auto;background:#0e0e0e;border:1px solid #222;border-radius:10px;padding:8px 10px;color:#ddd;font:12px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;display:none;z-index:99"></div>
+
+  <script src="app.js"></script>
+
+<!-- Settings Panel -->
+<div id="settingsPanel" aria-hidden="true">
+  <div class="backdrop"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <button type="button" id="settingsClose">Close</button>
+    <h2 id="settingsTitle">Settings</h2>
+
+    <div class="settings-row">
+      <label for="prefLabels">Toolbar labels</label>
+      <select id="prefLabels">
+        <option value="auto">Auto (mobile shows)</option>
+        <option value="on">Always show</option>
+        <option value="off">Hide</option>
+      </select>
+      <div class="small">Controls the small words under the icons.</div>
+    </div>
+
+    <div class="settings-row">
+      <label for="prefGrid">Grid size (<span id="prefGridVal">240</span>px min)</label>
+      <input id="prefGrid" type="range" min="160" max="320" step="10" value="240" />
+      <div class="small">Adjusts how many cards fit per row.</div>
+    </div>
+
+    <div class="settings-row">
+      <label><input type="checkbox" id="prefFavFilter" /> Show “Favorites only” toggle in filters</label>
+    </div>
+
+    <div class="settings-row">
+      <label><input type="checkbox" id="prefSlideshow" /> Autoplay slideshow in viewer</label>
+      <label for="prefSlideMs">Slide interval (<span id="prefSlideMsVal">2500</span> ms)</label>
+      <input id="prefSlideMs" type="range" min="1200" max="6000" step="200" value="2500" />
+    </div>
+
+    <div class="settings-row settings-actions">
+      <button type="button" id="settingsExport" class="btn sm">Export settings</button>
+      <label class="btn sm" for="settingsImportInput">Import settings</label>
+      <input id="settingsImportInput" type="file" accept="application/json,.json" style="position:fixed;left:-9999px" />
+      <button type="button" id="settingsClear" class="btn sm danger">Clear local data</button>
     </div>
   </div>
-</header>
-
-<div class="container">
-  <aside class="side"><nav class="nav">
-      <a href="#overview">Overview</a>
-      <a href="#prep">Prep</a>
-      <a href="#eac">Disable EAC</a>
-      <a href="#launch">Launch & Attach CE</a>
-      <a href="#spawn">Spawn Runes/Items</a>
-      <a href="#dupe">Duplicate Loop</a>
-      <a href="#online">Clean Online Return</a>
-      <a href="#troubleshoot">Troubleshooting</a>
-      <a href="#resources">Resources &amp; Links</a>
-  </nav></aside>
-
-  <main class="main" id="main">
-    <section class="card" id="overview">
-      <h2>Overview (What you’re doing)</h2>
-      <p class="callout">Run Elden Ring <span class="badge">offline</span> with EAC disabled, attach Cheat Engine to <span class="kbd">eldenring.exe</span>, spawn runes/items, and keep a clean save for online play.</p>
-      <div class="meter" title="Offline Safety Meter"><span id="meterbar"></span></div>
-      <small class="muted">Save path: <span class="kbd">C:\Users\&lt;You&gt;\AppData\Roaming\EldenRing\&lt;SteamID&gt;\ER0000.sl2</span></small>
-    </section>
-
-    <section class="card" id="prep">
-      <h2>Prep (once)</h2>
-      <div class="grid two">
-        <div>
-          <div class="step"><div class="num">1</div><div><b>Back up your save</b> (<span class="kbd">ER0000.sl2</span>) to a safe folder.</div></div>
-          <div class="step"><div class="num">2</div><div>Set <b>Steam → Go Offline</b> and restart Steam.</div></div>
-        </div>
-        <div>
-          <div class="check"><input type="checkbox" id="c1"><label for="c1">Save backed up</label></div>
-          <div class="check"><input type="checkbox" id="c2"><label for="c2">Steam is Offline</label></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" id="eac">
-      <h2>Disable Easy Anti‑Cheat</h2>
-      <div class="grid two">
-        <div>
-          <div class="step"><div class="num">1</div><div>Open <span class="kbd">...\Steam\steamapps\common\ELDEN RING\Game\</span></div></div>
-          <div class="step"><div class="num">2</div><div>Rename <span class="kbd">start_protected_game.exe</span> → <span class="kbd">start_protected_game.exe.bak</span></div></div>
-          <div class="step"><div class="num">3</div><div>Copy <span class="kbd">eldenring.exe</span> and rename that copy to <span class="kbd">start_protected_game.exe</span></div></div>
-          <p class="callout">Launching now uses your copy (no EAC) so CE can attach safely.</p>
-        </div>
-        <div class="check"><input type="checkbox" id="c3"><label for="c3">EAC disabled</label></div>
-      </div>
-    </section>
-
-    <section class="card" id="launch">
-      <h2>Launch & Attach Cheat Engine</h2>
-      <div class="grid two">
-        <div>
-          <div class="step"><div class="num">1</div><div>Launch via your new <span class="kbd">start_protected_game.exe</span>.</div></div>
-          <div class="step"><div class="num">2</div><div>Open Cheat Engine → attach to <span class="kbd">eldenring.exe</span>.</div></div>
-          <div class="step"><div class="num">3</div><div>Load your table (ItemGib / AddSoul / TGA) and enable needed scripts.</div></div>
-        </div>
-        <div>
-          <details class="group" open>
-            <summary>Quick checklist</summary>
-            <div class="inner">
-              <div class="check"><input type="checkbox" id="l1"><label for="l1">Steam still offline</label></div>
-              <div class="check"><input type="checkbox" id="l2"><label for="l2">EAC‑less exe launched</label></div>
-              <div class="check"><input type="checkbox" id="l3"><label for="l3">CE attached to process</label></div>
-            </div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" id="spawn">
-      <h2>Spawn Runes/Items</h2>
-      <details class="group" open>
-        <summary>Runes (AddSoul)</summary>
-        <div class="inner">
-          <ol>
-            <li>Load a Rune Injection table in CE.</li>
-            <li>Enable <b>AddSoul</b>, enter amount, activate.</li>
-            <li>Tab back into the game — runes are applied.</li>
-          </ol>
-        </div>
-      </details>
-      <details class="group">
-        <summary>Items (ItemGib)</summary>
-        <div class="inner">
-          <ol>
-            <li>Load an Item Spawning table.</li>
-            <li>Enable <b>ItemGib</b>, paste a valid Item ID + quantity.</li>
-            <li>Activate → pick up the spawned item in‑game.</li>
-          </ol>
-        </div>
-      </details>
-      <details class="group">
-        <summary>Item IDs</summary>
-        <div class="inner">
-          <ul>
-            <li><a href="https://github.com/AltimorTASDK/EldenRing-ItemIDList" target="_blank" rel="noopener">Master Item ID List</a></li>
-            <li><a href="https://github.com/Ariescyn/EldenRing-Save-Manager/issues/62" target="_blank" rel="noopener">DLC Item IDs discussion</a></li>
-          </ul>
-        </div>
-      </details>
-    </section>
-
-    <section class="card" id="dupe">
-      <h2>Duplicate Loop (optional)</h2>
-      <ol>
-        <li>Drop spawned items on the ground.</li>
-        <li>Quit the game.</li>
-        <li>Restore your backup over <span class="kbd">ER0000.sl2</span>.</li>
-        <li>Launch offline again → pick up → repeat.</li>
-      </ol>
-      <p class="callout"><b>Pro tip:</b> Keep <b>CLEAN_SAVE</b> (for online) and <b>WORKING_SAVE</b> (for offline edits).</p>
-    </section>
-
-    <section class="card" id="online">
-      <h2>Clean Online Return</h2>
-      <ol>
-        <li>Delete the copied <span class="kbd">start_protected_game.exe</span>.</li>
-        <li>Rename your <span class="kbd">.bak</span> back to <span class="kbd">start_protected_game.exe</span>.</li>
-        <li>Restore your clean, unmodded save.</li>
-        <li>Set Steam online and launch normally.</li>
-      </ol>
-      <div class="check"><input type="checkbox" id="cleanSave"><label for="cleanSave">I restored my clean save</label></div>
-    </section>
-
-    <section class="card" id="troubleshoot">
-      <h2>Troubleshooting</h2>
-      <details class="group" open>
-        <summary>Game won’t launch offline</summary>
-        <div class="inner">
-          <ul><li>Recheck Steam’s Offline mode (restart Steam).</li><li>Verify the EAC rename/copy steps.</li></ul>
-        </div>
-      </details>
-      <details class="group">
-        <summary>CE can’t attach</summary>
-        <div class="inner">
-          <ul><li>Confirm you launched the EAC‑less executable.</li><li>Attach to the correct process (<span class="kbd">eldenring.exe</span>).</li></ul>
-        </div>
-      </details>
-      <footer>Made for Josh — Offline use only.</footer>
-    </section>
-  
-
-<section class="card" id="resources">
-  <h2>Resources &amp; Links</h2>
-  <ul>
-  <ul>
-    <li><a href="https://www.nexusmods.com/eldenring/mods/48" target="_blank" rel="noopener">Hexinton – Ultimate CE Table</a></li>
-    <li><a href="https://www.nexusmods.com/eldenring/mods/54" target="_blank" rel="noopener">Marcus101RR – CE Table</a></li>
-    <li><a href="https://fearlessrevolution.com/viewtopic.php?t=19348" target="_blank" rel="noopener">FearlessRevolution – Ultimate Table Thread</a></li>
-    <li><a href="https://github.com/The-Grand-Archives/Elden-Ring-CT-TGA" target="_blank" rel="noopener">The Grand Archives – GitHub Repo</a></li>
-    <li><a href="https://github.com/The-Grand-Archives/Elden-Ring-CT-TGA/releases" target="_blank" rel="noopener">The Grand Archives – Releases</a></li>
-    <li><a href="https://github.com/Nordgaren/Elden-Ring-Debug-Tool" target="_blank" rel="noopener">Nordgaren – Elden Ring Debug Tool</a></li>
-    <li><a href="https://github.com/AltimorTASDK/EldenRing-ItemIDList" target="_blank" rel="noopener">Item IDs – Master List</a></li>
-    <li><a href="https://github.com/Ariescyn/EldenRing-Save-Manager/issues/62" target="_blank" rel="noopener">DLC Item IDs (Discussion)</a></li>
-  </ul>
-
-</section>
-
-
-</main>
 </div>
 
-<!-- Back to Top -->
-<div id="toTop"><button class="btn" type="button">▲ Top <small>(smooth)</small></button></div>
-
-<div class="warn" id="warn">⚠️ Don’t go online until you’ve restored your clean save and original files.</div>
-<script src='script.js'></script>
-<div id="cmdk" role="dialog" aria-modal="true" aria-labelledby="cmdk-title" hidden>
-  <div class="cmdk-backdrop"></div>
-  <div class="cmdk-box" role="document">
-    <div class="cmdk-head">
-      <strong id="cmdk-title">Jump to…</strong>
-      <span class="cmdk-hint">/ or ⌘K to open · Esc to close</span>
-    </div>
-    <input id="cmdk-input" type="text" aria-label="Type to filter sections" placeholder="Type a section name…" autocomplete="off">
-    <ul id="cmdk-list" role="listbox" aria-label="Sections"></ul>
-  </div>
-</div>
-
-
-<div id="toast" role="status" aria-live="polite" hidden></div>
-<footer style="text-align:center; padding:10px; font-size:0.9em; opacity:0.8;">Disclaimer: This site content was AI generated.</footer>
-
-</body></html>
+</body>
+</html>
