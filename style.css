@@ -68,8 +68,8 @@
       position:absolute; background:#101010e0; border:1px solid #2a2a2a; color:#fff;
       width:44px; height:44px; border-radius:12px; display:grid; place-items:center; cursor:pointer; font-size:24px;
     }
-    #viewer .v-prev{ left:16px; top:50%; transform:translateY(-50%) }
-    #viewer .v-next{ right:16px; top:50%; transform:translateY(-50%) }
+    #viewer .v-prev{ left: calc(env(safe-area-inset-left) + 12px); top:50%; transform:translateY(-50%) }
+    #viewer .v-next{ right: calc(env(safe-area-inset-right) + 12px); top:50%; transform:translateY(-50%) }
     #viewer .v-close{ top:16px; right:16px; font-size:18px }
     #viewer .v-fav{ top:16px; left:16px; color:#ffdf5f }
     #viewer .v-count{ position:absolute; bottom:16px; left:50%; transform:translateX(-50%); font-size:12px; color:#ddd; background:#101010e0; border:1px solid #2a2a2a; padding:6px 10px; border-radius:10px }
@@ -183,4 +183,14 @@ button.icon-btn, label.icon-btn{border:none !important;border-radius:0 !importan
   color:#fff;
 }
 label.icon-btn.file-btn{ overflow:visible }
+
+
+
+/* safer tap targets + safe-area clamping */
+#viewer .v-prev, #viewer .v-next, #viewer .v-close, #viewer .v-fav{
+  min-width: 44px;
+  min-height: 44px;
+  z-index: 10001;
+  touch-action: manipulation;
+}
 
